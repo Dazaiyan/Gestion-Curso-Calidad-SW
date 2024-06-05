@@ -1,0 +1,20 @@
+<!--
+    Editar Estudiante
+-->
+{% extends 'layout.html' %}
+{% block content %}
+<div class="mt-4">
+    <h2>Editar Estudiante</h2>
+    <form method="post">
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" value="{{ student[1] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ student[2] }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Actualizar Estudiante</button>
+    </form>
+</div>
+{% endblock %}

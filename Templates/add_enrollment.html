@@ -1,0 +1,33 @@
+<!--
+    Agregar Inscripcion
+-->
+{% extends 'layout.html' %}
+{% block content %}
+<div class="mt-4">
+    <h2>Agregar Inscripción</h2>
+    <form method="post">
+        <div class="form-group">
+            <label for="id_estudiante">Estudiante</label>
+            <select class="form-control" id="id_estudiante" name="id_estudiante" required>
+                {% for student in students %}
+                <option value="{{ student[0] }}">{{ student[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="id_curso">Curso</label>
+            <select class="form-control" id="id_curso" name="id_curso" required>
+                {% for course in courses %}
+                <option value="{{ course[0] }}">{{ course[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="fecha_inscripcion">Fecha de Inscripción</label>
+            <input type="date" class="form-control" id="fecha_inscripcion" name="fecha_inscripcion" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar Inscripción</button>
+    </form>
+</div>
+{% endblock %}
+

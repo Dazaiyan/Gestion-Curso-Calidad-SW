@@ -1,0 +1,35 @@
+<!--
+    Vista De Inscripcion
+-->
+{% extends 'layout.html' %}
+{% block content %}
+<div class="mt-4">
+    <a href="{{ url_for('add_enrollment') }}" class="btn btn-primary">Agregar Inscripción</a>
+    <table class="table table-striped mt-4">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Estudiante</th>
+                <th>Curso</th>
+                <th>Fecha de Inscripción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for enrollment in enrollments %}
+            <tr>
+                <td>{{ enrollment[0] }}</td>
+                <td>{{ enrollment[1] }}</td>
+                <td>{{ enrollment[2] }}</td>
+                <td>{{ enrollment[3] }}</td>
+                <td>
+                    <a href="{{ url_for('edit_enrollment', id=enrollment[0]) }}" class="btn btn-info">Editar</a>
+                    <form action="{{ url_for('delete_enrollment', id=enrollment[0]) }}" method="post" style="display:inline-block;">
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
