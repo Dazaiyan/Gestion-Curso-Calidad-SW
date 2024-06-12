@@ -27,7 +27,9 @@ Esta es una aplicación web de gestión de cursos creada con Flask y MySQL. Perm
 3. *Instalar las dependencias:*
 
     
-    - pip install -r requirements.txt
+    - pip install flask
+    - pip install flask-mysqldb
+    
     
 
 4. *Configurar la base de datos MySQL:*
