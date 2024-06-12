@@ -32,6 +32,57 @@ def cursos():
         return render_template('cursos.html', courses=courses)
     return render_template('cursos.html')
 
+# Agregar Curso
+@app.route('/add_course', methods=['GET', 'POST'])
+def add_course():
+    if request.method == 'POST':
+        course_details = request.form
+        nombre = course_details['nombre']
+        descripcion = course_details['descripcion']
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO Cursos(nombre, descripcion) VALUES(%s, %s)", (nombre, descripcion))
+        mysql.connection.commit()
+        cur.close()
+        flash('Curso Agregado Satisfactoriamente')
+        return redirect(url_for('cursos'))
+    return render_template('add_course.html')
+
+# Editar curso
+@app.route('/edit_course/<int:id>', methods=['GET', 'POST'])
+def edit_course(id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM Cursos WHERE id = %s", [id])
+    course = cur.fetchone()
+
+    if request.method == 'POST':
+        course_details = request.form
+        nombre = course_details['nombre']
+        descripcion = course_details['descripcion']
+
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            UPDATE Cursos
+            SET nombre = %s, descripcion = %s
+            WHERE id = %s
+        """, (nombre, descripcion, id))
+        mysql.connection.commit()
+        cur.close()
+        flash('Curso Actualizado Satisfactoriamente')
+        return redirect(url_for('cursos'))
+
+    return render_template('edit_course.html', course=course)
+
+# Eliminar curso
+@app.route('/delete_course/<int:id>', methods=['POST'])
+def delete_course(id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM Cursos WHERE id = %s", [id])
+    mysql.connection.commit()
+    cur.close()
+    flash('Curso Eliminado Satisfactoriamente')
+    return redirect(url_for('cursos'))
+
 # Realiza una consulta a la base de datos para obtener las inscripciones y las muestra en `inscripciones.html`.
 @app.route('/inscripciones')
 def inscripciones():
