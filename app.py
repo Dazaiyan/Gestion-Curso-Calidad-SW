@@ -44,7 +44,7 @@ def add_course():
         cur.execute("INSERT INTO Cursos(nombre, descripcion) VALUES(%s, %s)", (nombre, descripcion))
         mysql.connection.commit()
         cur.close()
-        flash('Curso Agregado Satisfactoriamente')
+        flash('Curso Agregado Satisfactoriamente', 'success')
         return redirect(url_for('cursos'))
     return render_template('add_course.html')
 
@@ -68,7 +68,7 @@ def edit_course(id):
         """, (nombre, descripcion, id))
         mysql.connection.commit()
         cur.close()
-        flash('Curso Actualizado Satisfactoriamente')
+        flash('Curso Actualizado Satisfactoriamente', 'success')
         return redirect(url_for('cursos'))
 
     return render_template('edit_course.html', course=course)
@@ -77,10 +77,16 @@ def edit_course(id):
 @app.route('/delete_course/<int:id>', methods=['POST'])
 def delete_course(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM Cursos WHERE id = %s", [id])
-    mysql.connection.commit()
+    # Verificar si el curso tiene inscripciones
+    cur.execute("SELECT * FROM Inscripciones WHERE id_curso = %s", [id])
+    enrollment = cur.fetchone()
+    if enrollment:
+        flash('No se puede eliminar el curso porque tiene inscripciones.', 'danger')
+    else:
+        cur.execute("DELETE FROM Cursos WHERE id = %s", [id])
+        mysql.connection.commit()
+        flash('Curso Eliminado Satisfactoriamente', 'success')
     cur.close()
-    flash('Curso Eliminado Satisfactoriamente')
     return redirect(url_for('cursos'))
 
 # Realiza una consulta a la base de datos para obtener las inscripciones y las muestra en `inscripciones.html`.
@@ -112,7 +118,7 @@ def edit_student(id):
         """, (nombre, email, id))
         mysql.connection.commit()
         cur.close()
-        flash('Estudiante Actualizado Satisfactoriamente')
+        flash('Estudiante Actualizado Satisfactoriamente', 'success')
         return redirect(url_for('index'))
 
     return render_template('edit_student.html', student=student)
@@ -129,7 +135,7 @@ def add_student():
         cur.execute("INSERT INTO Estudiantes(nombre, email) VALUES(%s, %s)", (nombre, email))
         mysql.connection.commit()
         cur.close()
-        flash('Estudiante Agregado Satisfactoriamente')
+        flash('Estudiante Agregado Satisfactoriamente', 'success')
         return redirect(url_for('index'))
 
     return render_template('add_student.html')
@@ -138,10 +144,16 @@ def add_student():
 @app.route('/delete_student/<int:id>', methods=['POST'])
 def delete_student(id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM Estudiantes WHERE id = %s", [id])
-    mysql.connection.commit()
+    # Verificar si el estudiante tiene inscripciones
+    cur.execute("SELECT * FROM Inscripciones WHERE id_estudiante = %s", [id])
+    enrollment = cur.fetchone()
+    if enrollment:
+        flash('No se puede eliminar el estudiante porque tiene inscripciones.', 'danger')
+    else:
+        cur.execute("DELETE FROM Estudiantes WHERE id = %s", [id])
+        mysql.connection.commit()
+        flash('Estudiante Eliminado Satisfactoriamente', 'success')
     cur.close()
-    flash('Estudiante Eliminado Satisfactoriamente')
     return redirect(url_for('index'))
 
 # Proporciona un formulario para ingresar los detalles de una nueva inscripción y guardarlos en la base de datos.
@@ -163,7 +175,7 @@ def add_enrollment():
                     (id_estudiante, id_curso, fecha_inscripcion))
         mysql.connection.commit()
         cur.close()
-        flash('Inscripción Agregada Satisfactoriamente')
+        flash('Inscripción Agregada Satisfactoriamente', 'success')
         return redirect(url_for('inscripciones'))
 
     return render_template('add_enrollment.html', students=students, courses=courses)
@@ -194,7 +206,7 @@ def edit_enrollment(id):
         """, (id_estudiante, id_curso, fecha_inscripcion, id))
         mysql.connection.commit()
         cur.close()
-        flash('Inscripción Actualizada Satisfactoriamente')
+        flash('Inscripción Actualizada Satisfactoriamente', 'success')
         return redirect(url_for('inscripciones'))
 
     return render_template('edit_enrollment.html', enrollment=enrollment, students=students, courses=courses)
@@ -206,7 +218,7 @@ def delete_enrollment(id):
     cur.execute("DELETE FROM Inscripciones WHERE id = %s", [id])
     mysql.connection.commit()
     cur.close()
-    flash('Inscripción Eliminada Satisfactoriamente')
+    flash('Inscripción Eliminada Satisfactoriamente', 'success')
     return redirect(url_for('inscripciones'))
 
 # Punto de entrada de la aplicación que inicia el servidor web de Flask.
